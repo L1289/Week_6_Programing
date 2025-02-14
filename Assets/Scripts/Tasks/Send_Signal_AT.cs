@@ -1,10 +1,16 @@
 using NodeCanvas.Framework;
 using ParadoxNotion.Design;
+using System.Collections;
+using Unity.VisualScripting;
+using UnityEngine;
 
 
 namespace NodeCanvas.Tasks.Actions {
 
 	public class Send_Signal_AT : ActionTask {
+
+		public BBParameter<bool> signal;
+		public int framedelay;
 
 		//Use for initialization. This is called only once in the lifetime of the task.
 		//Return null if init was successfull. Return an error string otherwise
@@ -16,6 +22,17 @@ namespace NodeCanvas.Tasks.Actions {
 		//Call EndAction() to mark the action as finished, either in success or failure.
 		//EndAction can be called from anywhere.
 		protected override void OnExecute() {
+			signal.value = false;
+			StartCoroutine(FrameDelay());
+		}
+
+		IEnumerator FrameDelay()
+		{
+			for(int i = 0; i < framedelay; i++)
+			{
+				yield return new WaitForEndOfFrame();
+			}
+			signal.value = false;
 			EndAction(true);
 		}
 
